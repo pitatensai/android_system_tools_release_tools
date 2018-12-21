@@ -44,8 +44,8 @@ bool FindHashOfKeyName(string hash_file_name, string keyName, string *hash, bool
     bool found = false;
     string lineKeyWord;
     while (getline(fin, tempStr)) {
-        if (usePath) lineKeyWord = "path=\"" + keyName;
-        else lineKeyWord = "name=\"" + keyName;
+        if (usePath) lineKeyWord = "path=\"" + keyName + "\"";
+        else lineKeyWord = "name=\"" + keyName + "\"";
         if (HasKeyWordInString(tempStr, lineKeyWord)) {
             //find, convert str and write
 FOUND_LINE:
