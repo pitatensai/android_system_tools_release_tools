@@ -10,6 +10,7 @@ bool FindKeyWordEndFix(string originStr, string keyword) {
     }
 }
 
+// if keyword is child of originStr, return true
 bool HasKeyWordInString(string originStr, string keyword) {
     size_t where = originStr.find(keyword);
     LogD("keyword:" + keyword);
@@ -19,15 +20,16 @@ bool HasKeyWordInString(string originStr, string keyword) {
     }
 }
 
-bool FindKeyName(string inputOriginStr, string keyword, string *result) {
+// find the string between keyword1 & keyword2, example: revision="31234124", result is 31234124
+bool FindKeyName(string inputOriginStr, string keyword1, string keyword2, string *result) {
     //keyword start pos, such as 'project path=' is 3
     string originStr(inputOriginStr);
-    size_t start = originStr.find(keyword);
-    size_t keywordLength = keyword.length();
+    size_t start = originStr.find(keyword1);
+    size_t keywordLength = keyword1.length();
 
     if (start != string::npos) {
         //find the next of '"' after keyword, such as <project path="build/blueprint"
-        size_t end = originStr.find("\"", start + keywordLength);
+        size_t end = originStr.find(keyword2, start + keywordLength);
         if (end == std::string::npos) return false;
         size_t length = end - start - keywordLength;
         if (length == 0) return false;
@@ -38,6 +40,7 @@ bool FindKeyName(string inputOriginStr, string keyword, string *result) {
     return false;
 }
 
+// use projectName or projectPath to find its commitID.
 bool FindHashOfKeyName(string hash_file_name, string keyName, string *hash, bool usePath) {
     ifstream fin(hash_file_name.data());
     string tempStr;
@@ -76,7 +79,7 @@ FOUND_LINE:
 
 bool FindHashFromLine(string stringLine, string *hash) {
     string result;
-    if (FindKeyName(stringLine, "revision=\"", &result)) {
+    if (FindKeyName(stringLine, "revision=\"", "\"", &result)) {
         *hash = result;
         return true;
     }
@@ -110,6 +113,7 @@ bool FindHashFromFile(string fileName, string *hash) {
 
 }
 
+// [Abandon] return true if keyword is end of originStr.
 bool IsKeyWordEndFix(string originStr, string keyword) {
     size_t where = originStr.rfind(keyword);
     if (where == string::npos) return false;

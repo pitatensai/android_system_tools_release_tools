@@ -84,10 +84,10 @@ void update(string input_file, string hash_file, string output_file, bool fixed_
             string node_path;
             bool foundPath = true;
             //find 'path/name' in string line
-            if (!FindKeyName(tempStr, "path=\"", &node_path)) {
+            if (!FindKeyName(tempStr, "path=\"", "\"", &node_path)) {
                 // not fount path = xxx, actully path = name
                 //LogD("%s not found `path`, path = name", input_file);
-                if (FindKeyName(tempStr, "name=\"", &node_name)) {
+                if (FindKeyName(tempStr, "name=\"", "\"", &node_name)) {
                     node_path = node_name;
                     LogD("use name instead of path");
                 } else {

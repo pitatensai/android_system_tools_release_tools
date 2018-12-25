@@ -20,7 +20,7 @@ using namespace std;
 
 bool FindKeyWordEndFix(string originStr, string keyword);
 bool HasKeyWordInString(string originStr, string keyword);
-bool FindKeyName(string originStr, string keyword, string *result);
+bool FindKeyName(string originStr, string keyword1, string keyword2, string *result);
 bool FindHashOfKeyName(string hash_file_name, string keyName, string *hash, bool usePath);
 bool FindHashFromLine(string stringLine, string *hash);
 bool FindHashFromFile(string fileName, string *hash);
