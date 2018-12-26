@@ -1,5 +1,13 @@
 #include "release_utils.h"
 
+string getPath(string param) {
+    if (FindKeyWordEndFix(param, "/")) {
+        return param.substr(0, param.length()-1);
+    } else {
+        return param;
+    }
+}
+
 bool FindKeyWordEndFix(string originStr, string keyword) {
     size_t where = originStr.rfind(keyword);
     if (where == string::npos) return false;

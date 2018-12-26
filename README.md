@@ -23,11 +23,17 @@ release_tool -i rk3326_pie_sdk_express_release_v1.0.xml -b manifest_20181119.143
 release_tool -i manifest_20181119.1436.xml -b manifest_20181119.1436.xml -o manifest_temp.xml -dir ./PATCHES
 ```
 
+- 更新时保持某些仓库的点不更新, 注意: 配置文件的优先级比补丁包[-dir参数]高!
+```
+release_tool -i manifest_20181119.1436.xml -b manifest_20181119.1436.xml -o manifest_temp.xml -dir ./PATCHES -c config.ini
+```
+
 ### 参数说明
 ```
 -i      需要基于这些工程进行更新的manifest文件, 需要更新这个列表内的hash值;
 -b      使用 `build.sh` 或 `repo manifest` 命令编译出的manifest文件, 包含所有SDK工程的hash值;
 -o      输出文件, 只更新-i参数中文件的hash值, 不会修改仓库列表及remote地址等;
+-c      使用配置文件, 可以用来过滤project, 使用时此参数时, 当遍历到属于[Filter]这个session下的project时, 会保留原始commitID, 该project的hash值不会更新, 配置文件可以参考config.ini;
 -dir    用于恢复服务器不存在的hash值, 用于代码回朔, 遍历 build.sh脚本所生成的 git-merge-base.txt 文件, 输出-o文件后可直接用于sync.
 ```
 

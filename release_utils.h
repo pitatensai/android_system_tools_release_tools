@@ -18,6 +18,8 @@ if (DEBUG) cout << "[DEBUG] " << __func__ <<"() at line "<< __LINE__  << ":" << 
 
 using namespace std;
 
+string getPath(string param);
+
 bool FindKeyWordEndFix(string originStr, string keyword);
 bool HasKeyWordInString(string originStr, string keyword);
 bool FindKeyName(string originStr, string keyword1, string keyword2, string *result);
