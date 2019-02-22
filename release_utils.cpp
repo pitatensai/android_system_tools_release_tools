@@ -48,41 +48,60 @@ bool FindKeyName(string inputOriginStr, string keyword1, string keyword2, string
     return false;
 }
 
-// use projectName or projectPath to find its commitID.
-bool FindHashOfKeyName(string hash_file_name, string keyName, string *hash, bool usePath) {
+bool FindDefaultRevision(string hash_file_name, string *revision) {
+    ifstream fin(hash_file_name.data());
+    string tempStr;
+    while (getline(fin, tempStr)) {
+        if (HasKeyWordInString(tempStr, "<default remote=")) {
+            FindKeyName(tempStr, "revision=\"", "\"", revision);
+            break;
+        }
+    }
+}
+
+bool FindValueOfNodeName(string hash_file_name, string lineTAG, string node, string *value, bool usePath) {
     ifstream fin(hash_file_name.data());
     string tempStr;
     bool found = false;
     string lineKeyWord;
     while (getline(fin, tempStr)) {
-        if (usePath) lineKeyWord = "path=\"" + keyName + "\"";
-        else lineKeyWord = "name=\"" + keyName + "\"";
+        if (usePath) lineKeyWord = "path=\"" + lineTAG + "\"";
+        else lineKeyWord = "name=\"" + lineTAG + "\"";
         if (HasKeyWordInString(tempStr, lineKeyWord)) {
             //find, convert str and write
 FOUND_LINE:
             string result;
-            if (FindHashFromLine(tempStr, &result)) {
-                *hash = result;
-                LogD("find hash for line:" + tempStr + "," + keyName + ",hash:" + *hash);
+            if (FindKeyName(tempStr, node, "\"", &result)) {
+                *value = result;
+                LogD("find " + node + " for line:" + tempStr + "," + lineTAG + ",value:" + *value);
                 found = true;
                 break;
             }
             //not find, write to file directly.
             else {
-                //found name but not hash
-                LogE("missing hash for line:" + keyName);
+                //found name but not value
+                LogW("missing \"" + node + " at line:" + lineTAG);
             }
         } else {
             //found nothing at path, try name
-            if (usePath && HasKeyWordInString(tempStr, "name=\"" + keyName)) {
+            if (usePath && HasKeyWordInString(tempStr, "name=\"" + lineTAG + "\"")) {
                 goto FOUND_LINE;
             }
-            LogD("Can't Find line for name:" + keyName + ", find it next line!");
+            LogD("Can't Find line for name:" + lineTAG + ", find it next line!");
         }
     }
 
     fin.close();
     return found;
+}
+
+// use projectName or projectPath to find its commitID.
+bool FindHashOfKeyName(string hash_file_name, string keyName, string *hash, bool usePath) {
+    return FindValueOfNodeName(hash_file_name, keyName, "revision=\"", hash, usePath);
+}
+
+bool FindUpstreamOfKeyName(string hash_file_name, string keyName, string *upstream, bool usePath) {
+    return FindValueOfNodeName(hash_file_name, keyName, "upstream=\"", upstream, usePath);
 }
 
 bool FindHashFromLine(string stringLine, string *hash) {

@@ -13,6 +13,9 @@
 #define LogE(format)\
 cout << "[ERROR] " << __func__ <<"() at line "<< __LINE__  << ":" << format << endl;
 
+#define LogW(format)\
+cout << "[WARNING] " << __func__ <<"() at line "<< __LINE__  << ":" << format << endl;
+
 #define LogD(format)\
 if (DEBUG) cout << "[DEBUG] " << __func__ <<"() at line "<< __LINE__  << ":" << format << endl;
 
@@ -22,8 +25,10 @@ string getPath(string param);
 
 bool FindKeyWordEndFix(string originStr, string keyword);
 bool HasKeyWordInString(string originStr, string keyword);
+bool FindDefaultRevision(string hash_file_name, string *revision);
 bool FindKeyName(string originStr, string keyword1, string keyword2, string *result);
 bool FindHashOfKeyName(string hash_file_name, string keyName, string *hash, bool usePath);
+bool FindUpstreamOfKeyName(string hash_file_name, string keyName, string *upstream, bool usePath);
 bool FindHashFromLine(string stringLine, string *hash);
 bool FindHashFromFile(string fileName, string *hash);
 

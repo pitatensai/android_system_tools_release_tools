@@ -142,6 +142,15 @@ void update(string input_file, string hash_file, string output_file, bool fixed_
                     if (FindHashFromLine(tempStr, &originHash)) {
                         //do update Hash
                         ReplaceString(originHash, &tempStr, hash);
+                        //do update upstream
+                        string upstream;
+                        if (FindUpstreamOfKeyName(hash_file, node_path, &upstream, foundPath)) {
+                            LogD("find upstream for project!");
+                            string originUpstream;
+                            if (FindKeyName(tempStr, "upstream=\"", "\"", &originUpstream)) {
+                                ReplaceString(originUpstream, &tempStr, upstream);
+                            }
+                        }
                     } else {
                         // can't find hash for origin line.
                         LogE(input_file + " missing hash at line: " + node_name);
@@ -154,6 +163,13 @@ void update(string input_file, string hash_file, string output_file, bool fixed_
                 result = tempStr;
                 goto WRITE_FILE;
             }
+        } else if (HasKeyWordInString(tempStr, "<default")) {
+            // update default revision
+            string revisionDefault, revisionNew;
+            FindKeyName(tempStr, "revision=\"", "\"", &revisionDefault);
+            FindDefaultRevision(hash_file, &revisionNew);
+            ReplaceString(revisionDefault, &tempStr, revisionNew);
+            result = tempStr;
         } else {
             //keep origin string
             result = tempStr;
