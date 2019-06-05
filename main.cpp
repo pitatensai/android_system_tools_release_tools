@@ -16,7 +16,15 @@ int     patch_file_index = 0;
 
 int usage() {
     cout
-    << "usage: release_tool -i input_file -b build_hash_file -o output_file [-dir dir]\n"
+    << "******************************\n"
+    << "*****    release_tool    *****\n"
+    << "******************************\n"
+    << "[remote]:\t"
+    << GIT_PATH
+    << "\n[commit]:\t"
+    << GIT_VERSION
+    << "\n"
+    << "\nusage: release_tool -i input_file -b build_hash_file -o output_file [-dir dir]\n"
     << "\n"
     <<  "OPTIONS:\n"
     <<  "   -i         the manifest file which need to be update.\n"
